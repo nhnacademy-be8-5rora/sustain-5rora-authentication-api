@@ -12,18 +12,19 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
+    private final KeyEncrypt keyEncrypt;
 
-    public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
-
+    public JWTUtil(@Value("${spring.jwt.secret}")String secret, KeyEncrypt keyEncrypt) {
 
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.keyEncrypt = keyEncrypt;
     }
 
     public String createJwt(String username, String role, Long expiredMs) {
 
         return Jwts.builder()
-                .claim("username", username)
+                .claim("username", keyEncrypt.encrypt(username))
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
