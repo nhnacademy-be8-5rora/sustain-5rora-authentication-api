@@ -1,0 +1,9 @@
+### generage jwt
+POST http://localhost:8081/api/auth
+Content-Type: application/json
+
+{
+  "username": "test",
+  "role": "1234",
+  "expiredMs": 100000
+}
