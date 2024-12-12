@@ -31,6 +31,8 @@ spring:
 
   jwt:
     secret: "vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb"
+    aes:
+      secret: "YourSecretKeyKey"
 
 logging:
   level:
