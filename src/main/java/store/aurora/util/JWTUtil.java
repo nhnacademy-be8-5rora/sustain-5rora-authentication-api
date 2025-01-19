@@ -4,13 +4,11 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 public class JWTUtil {
@@ -24,8 +22,8 @@ public class JWTUtil {
         this.aesUtil = aesUtil;
     }
 
-    public String createJwt(String username) {
-
+    public String createJwt(String username, Long expiredMs) {
+        if(Objects.isNull(expiredMs)) expiredMs = (long) (1000 * 60 * 10); // 다중 토큰으로 변환하기 전에 access는 기존에 expiredMs 안 받았어서 호환되도록. 1000 * 60 * 60 : 1시간
         String encrypt1 = "";
         try {
             encrypt1 = aesUtil.encrypt(username);
@@ -36,7 +34,7 @@ public class JWTUtil {
         return Jwts.builder()
                 .claim("username", encrypt1)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour expiration
+                .expiration(new Date(System.currentTimeMillis() + expiredMs)) // 1000 * 60 * 60 : 1 hour expiration
                 .signWith(secretKey)
                 .compact();
     }
