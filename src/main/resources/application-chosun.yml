@@ -1,0 +1,15 @@
+logging:
+  level:
+    org.springframework.web: WARN
+
+server:
+  port: 10153
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+
+
+    service-url:
+      defaultZone: http://admin:1234@localhost:10155/eureka
